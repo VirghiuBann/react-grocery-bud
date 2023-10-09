@@ -1,14 +1,17 @@
 import { useState } from 'react'
 
-const Form = () => {
-  const [value, setValue] = useState('')
+const Form = ({ addItem }) => {
+  const [name, setName] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if (!value) return
+    if (!name) return
 
-    console.log(value)
+    addItem(name)
+    console.log(name)
+
+    setName('')
   }
 
   return (
@@ -19,8 +22,8 @@ const Form = () => {
           className='form-input'
           type='text'
           name='name'
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <button className='btn' type='submit'>
           Submit
