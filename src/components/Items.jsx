@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid'
 
 const Items = ({ items }) => {
   return (
-    <section>
+    <section className='items'>
       {!!items.length &&
         items.map((item) => {
           return <SingleItem {...item} key={nanoid()} />
