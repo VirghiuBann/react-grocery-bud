@@ -1,12 +1,12 @@
 import SingleItem from './SingleItem'
 import { nanoid } from 'nanoid'
 
-const Items = ({ items }) => {
+const Items = ({ items, removeItem }) => {
   return (
     <section className='items'>
       {!!items.length &&
         items.map((item) => {
-          return <SingleItem {...item} key={nanoid()} />
+          return <SingleItem {...item} removeItem={removeItem} key={nanoid()} />
         })}
     </section>
   )

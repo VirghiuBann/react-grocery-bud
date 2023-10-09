@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Form from './components/Form'
 import { nanoid } from 'nanoid'
 import Items from './components/Items'
@@ -12,13 +12,30 @@ const App = () => {
       name,
       completed: false,
     }
-    setItems([...items, newItem])
+    setItems((oldItems) => {
+      const updatedItems = [...oldItems, newItem]
+      localStorage.setItem('items', JSON.stringify(updatedItems))
+      return updatedItems
+    })
   }
+
+  const removeItem = (id) => {
+    const newItems = items.filter((item) => item.id !== id)
+    setItems([...newItems])
+  }
+
+  useEffect(() => {
+    const savedItems = JSON.parse(localStorage.getItem('items'))
+    if (savedItems && !!savedItems.length) {
+      setItems([...savedItems])
+    }
+  }, [])
+
   return (
     <main>
       <section className='section-center'>
         <Form addItem={addItem} />
-        <Items items={items} />
+        <Items items={items} removeItem={removeItem} />
       </section>
     </main>
   )
