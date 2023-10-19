@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { nanoid } from 'nanoid'
 import { ToastContainer, toast } from 'react-toastify'
@@ -7,7 +7,7 @@ import Form from './components/Form'
 import Items from './components/Items'
 
 const App = () => {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(getLocalItems())
 
   const addItem = (name) => {
     const newItem = {
@@ -15,48 +15,54 @@ const App = () => {
       name,
       completed: false,
     }
-    setItems((oldItems) => {
-      const updatedItems = [...oldItems, newItem]
-      localStorage.setItem('items', JSON.stringify(updatedItems))
-      return updatedItems
-    })
+    const updatedItems = [...items, newItem]
+
+    setItems([...updatedItems])
+    setLocalItems(updatedItems)
 
     toast.success('Item added successfully!')
   }
 
   const removeItem = (id) => {
     const newItems = items.filter((item) => item.id !== id)
-    setItems(() => {
-      localStorage.setItem('items', JSON.stringify(newItems))
-      return newItems
-    })
+
+    setItems([...newItems])
+    getLocalItems(newItems)
     toast.success('Item removed successfully!')
   }
 
   const updateCompleted = (id) => {
-    const updatedItems = [...items]
-    const itemIndex = updatedItems.findIndex((item) => item.id === id)
+    const currentItems = [...items]
+    // with findIndex
+    // const itemIndex = currentItems.findIndex((item) => item.id === id)
+    // if (itemIndex !== -1) {
+    //   currentItems[itemIndex] = {
+    //     ...currentItems[itemIndex],
+    //     completed: !currentItems[itemIndex].completed,
+    //   }
 
-    if (itemIndex !== -1) {
-      updatedItems[itemIndex] = {
-        ...updatedItems[itemIndex],
-        completed: !updatedItems[itemIndex].completed,
+    //   setItems([...updatedItems])
+    //   setLocalItems(updatedItems)
+    // }
+
+    // with map
+    const updatedItems = currentItems.map((item) => {
+      if (item.id === id) {
+        return { ...item, completed: !item.completed }
       }
-
-      setItems(() => {
-        localStorage.setItem('items', JSON.stringify(updatedItems))
-        return updatedItems
-      })
-      toast.success('Item updated successfully!')
-    }
+      return item
+    })
+    setItems([...updatedItems])
+    setLocalItems(updatedItems)
   }
 
-  useEffect(() => {
-    const savedItems = JSON.parse(localStorage.getItem('items'))
-    if (savedItems && !!savedItems.length) {
-      setItems([...savedItems])
-    }
-  }, [])
+  function getLocalItems() {
+    let items = localStorage.getItem('items')
+    return items ? JSON.parse(items) : []
+  }
+  function setLocalItems(item) {
+    localStorage.setItem('items', JSON.stringify(item))
+  }
 
   return (
     <main>
