@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
-import Form from './components/Form'
+
 import { nanoid } from 'nanoid'
+import { ToastContainer, toast } from 'react-toastify'
+
+import Form from './components/Form'
 import Items from './components/Items'
 
 const App = () => {
@@ -17,6 +20,8 @@ const App = () => {
       localStorage.setItem('items', JSON.stringify(updatedItems))
       return updatedItems
     })
+
+    toast.success('Item added successfully!')
   }
 
   const removeItem = (id) => {
@@ -25,6 +30,7 @@ const App = () => {
       localStorage.setItem('items', JSON.stringify(newItems))
       return newItems
     })
+    toast.success('Item removed successfully!')
   }
 
   const updateCompleted = (id) => {
@@ -41,6 +47,7 @@ const App = () => {
         localStorage.setItem('items', JSON.stringify(updatedItems))
         return updatedItems
       })
+      toast.success('Item updated successfully!')
     }
   }
 
@@ -54,6 +61,7 @@ const App = () => {
   return (
     <main>
       <section className='section-center'>
+        <ToastContainer />
         <Form addItem={addItem} />
         <Items
           items={items}
