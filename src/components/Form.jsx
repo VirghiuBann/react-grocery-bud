@@ -22,6 +22,7 @@ const Form = ({ addItem }) => {
           className='form-input'
           type='text'
           name='name'
+          id='name'
           value={name}
           onChange={(e) => setName(e.target.value)}
         />

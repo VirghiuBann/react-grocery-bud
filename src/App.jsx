@@ -21,7 +21,27 @@ const App = () => {
 
   const removeItem = (id) => {
     const newItems = items.filter((item) => item.id !== id)
-    setItems([...newItems])
+    setItems(() => {
+      localStorage.setItem('items', JSON.stringify(newItems))
+      return newItems
+    })
+  }
+
+  const updateCompleted = (id) => {
+    const updatedItems = [...items]
+    const itemIndex = updatedItems.findIndex((item) => item.id === id)
+
+    if (itemIndex !== -1) {
+      updatedItems[itemIndex] = {
+        ...updatedItems[itemIndex],
+        completed: !updatedItems[itemIndex].completed,
+      }
+
+      setItems(() => {
+        localStorage.setItem('items', JSON.stringify(updatedItems))
+        return updatedItems
+      })
+    }
   }
 
   useEffect(() => {
@@ -35,7 +55,11 @@ const App = () => {
     <main>
       <section className='section-center'>
         <Form addItem={addItem} />
-        <Items items={items} removeItem={removeItem} />
+        <Items
+          items={items}
+          removeItem={removeItem}
+          updateCompleted={updateCompleted}
+        />
       </section>
     </main>
   )
